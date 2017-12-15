@@ -25,6 +25,12 @@ CHEF_ROOT = File.join(File.dirname(__FILE__), "..")
 begin
   require "rspec/core/rake_task"
 
+  @rspec_opts = if ENV["CIRCLECI"]
+                  "--profile 10 --format RspecJunitFormatter --out test_results/rspec.xml"
+                else
+                  %w{--profile}
+                end
+
   desc "Run specs for Chef's Components (chef-config)"
   task :component_specs do
     Dir.chdir("chef-config") do
@@ -41,7 +47,7 @@ begin
 
   desc "Run standard specs (minus long running specs)"
   RSpec::Core::RakeTask.new(:spec) do |t|
-    t.rspec_opts = %w{--profile}
+    t.rspec_opts = @rspec_opts
     # right now this just limits to functional + unit, but could also remove
     # individual tests marked long-running
     t.pattern = FileList["spec/**/*_spec.rb"]
@@ -80,7 +86,7 @@ begin
     [:unit, :functional, :integration, :stress].each do |sub|
       desc "Run the specs under spec/#{sub}"
       RSpec::Core::RakeTask.new(sub) do |t|
-        t.rspec_opts = %w{--profile}
+        t.rspec_opts = @rspec_opts
         t.pattern = FileList["spec/#{sub}/**/*_spec.rb"]
       end
     end

@@ -92,7 +92,7 @@ module TinyServer
     attr_reader :server_thread
 
     def create_server(**extra_options)
-      server = WEBrick::HTTPServer.new(**options, **extra_options)
+      server = WEBrick::HTTPServer.new(options.merge(extra_options))
       server.mount("/", Rack::Handler::WEBrick, API.instance)
       server
     end

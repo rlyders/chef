@@ -307,7 +307,7 @@ class Chef
         yield
       rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET,
              Errno::ECONNREFUSED, EOFError, Net::HTTPBadResponse,
-             Net::HTTPHeaderSyntaxError, Net::ProtocolError, OpenSSL::SSL::SSLError,
+             Net::HTTPHeaderSyntaxError, Net::ProtocolError, ::OpenSSL::SSL::SSLError,
              Errno::EHOSTDOWN => e
         disable_data_collector_reporter
         code = if e.respond_to?(:response) && e.response.code

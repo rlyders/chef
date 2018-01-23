@@ -398,8 +398,8 @@ user password using shadow hash.")
                            new_resource.password
                          else
                            # Create a random 4 byte salt
-                           salt = OpenSSL::Random.random_bytes(4)
-                           encoded_password = OpenSSL::Digest::SHA512.hexdigest(salt + new_resource.password)
+                           salt = ::OpenSSL::Random.random_bytes(4)
+                           encoded_password = ::OpenSSL::Digest::SHA512.hexdigest(salt + new_resource.password)
                            salt.unpack("H*").first + encoded_password
                          end
 
@@ -412,15 +412,15 @@ user password using shadow hash.")
               salt = convert_to_binary(new_resource.salt)
               iterations = new_resource.iterations
             else
-              salt = OpenSSL::Random.random_bytes(32)
+              salt = ::OpenSSL::Random.random_bytes(32)
               iterations = new_resource.iterations # Use the default if not specified by the user
 
-              entropy = OpenSSL::PKCS5.pbkdf2_hmac(
+              entropy = ::OpenSSL::PKCS5.pbkdf2_hmac(
                 new_resource.password,
                 salt,
                 iterations,
                 128,
-                OpenSSL::Digest::SHA512.new
+                ::OpenSSL::Digest::SHA512.new
               )
             end
 
@@ -693,7 +693,7 @@ user password using shadow hash.")
         def salted_sha512_password_match?
           # Salt is included in the first 4 bytes of shadow data
           salt = current_resource.password.slice(0, 8)
-          shadow = OpenSSL::Digest::SHA512.hexdigest(convert_to_binary(salt) + new_resource.password)
+          shadow = ::OpenSSL::Digest::SHA512.hexdigest(convert_to_binary(salt) + new_resource.password)
           current_resource.password == salt + shadow
         end
 
@@ -704,12 +704,12 @@ user password using shadow hash.")
         def salted_sha512_pbkdf2_password_match?
           salt = convert_to_binary(current_resource.salt)
 
-          OpenSSL::PKCS5.pbkdf2_hmac(
+          ::OpenSSL::PKCS5.pbkdf2_hmac(
             new_resource.password,
             salt,
             current_resource.iterations,
             128,
-            OpenSSL::Digest::SHA512.new
+            ::OpenSSL::Digest::SHA512.new
           ).unpack("H*").first == current_resource.password
         end
 

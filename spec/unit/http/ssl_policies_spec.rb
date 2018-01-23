@@ -49,7 +49,7 @@ describe "HTTP SSL Policy" do
       end
 
       it "sets the OpenSSL verify mode to verify_peer" do
-        expect(http_client.verify_mode).to eq(OpenSSL::SSL::VERIFY_PEER)
+        expect(http_client.verify_mode).to eq(::OpenSSL::SSL::VERIFY_PEER)
       end
 
       it "raises a ConfigurationError if :ssl_ca_path is set to a path that doesn't exist" do
@@ -80,7 +80,7 @@ describe "HTTP SSL Policy" do
       end
 
       it "sets the OpenSSL verify mode to :verify_none" do
-        expect(http_client.verify_mode).to eq(OpenSSL::SSL::VERIFY_NONE)
+        expect(http_client.verify_mode).to eq(::OpenSSL::SSL::VERIFY_NONE)
       end
     end
 
@@ -108,17 +108,17 @@ describe "HTTP SSL Policy" do
       it "configures the HTTP client's cert and private key" do
         Chef::Config[:ssl_client_cert] = CHEF_SPEC_DATA + "/ssl/chef-rspec.cert"
         Chef::Config[:ssl_client_key]  = CHEF_SPEC_DATA + "/ssl/chef-rspec.key"
-        expect(http_client.cert.to_s).to eq(OpenSSL::X509::Certificate.new(IO.read(CHEF_SPEC_DATA + "/ssl/chef-rspec.cert")).to_s)
-        expect(http_client.key.to_s).to eq(OpenSSL::PKey::RSA.new(IO.read(CHEF_SPEC_DATA + "/ssl/chef-rspec.key")).to_s)
+        expect(http_client.cert.to_s).to eq(::OpenSSL::X509::Certificate.new(IO.read(CHEF_SPEC_DATA + "/ssl/chef-rspec.cert")).to_s)
+        expect(http_client.key.to_s).to eq(::OpenSSL::PKey::RSA.new(IO.read(CHEF_SPEC_DATA + "/ssl/chef-rspec.key")).to_s)
       end
     end
 
     context "when additional certs are located in the trusted_certs dir" do
       let(:self_signed_crt_path) { File.join(CHEF_SPEC_DATA, "trusted_certs", "example.crt") }
-      let(:self_signed_crt) { OpenSSL::X509::Certificate.new(File.read(self_signed_crt_path)) }
+      let(:self_signed_crt) { ::OpenSSL::X509::Certificate.new(File.read(self_signed_crt_path)) }
 
       let(:additional_pem_path) { File.join(CHEF_SPEC_DATA, "trusted_certs", "opscode.pem") }
-      let(:additional_pem) { OpenSSL::X509::Certificate.new(File.read(additional_pem_path)) }
+      let(:additional_pem) { ::OpenSSL::X509::Certificate.new(File.read(additional_pem_path)) }
 
       before do
         Chef::Config.trusted_certs_dir = File.join(CHEF_SPEC_DATA, "trusted_certs")
@@ -161,7 +161,7 @@ describe "HTTP SSL Policy" do
       end
 
       it "sets the OpenSSL verify mode to verify_peer" do
-        expect(http_client.verify_mode).to eq(OpenSSL::SSL::VERIFY_PEER)
+        expect(http_client.verify_mode).to eq(::OpenSSL::SSL::VERIFY_PEER)
       end
     end
 

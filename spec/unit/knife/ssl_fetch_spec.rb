@@ -131,10 +131,10 @@ E
     let(:name_args) { %w{https://foo.example.com:8443} }
 
     let(:tcp_socket) { double(TCPSocket) }
-    let(:ssl_socket) { double(OpenSSL::SSL::SSLSocket) }
+    let(:ssl_socket) { double(::OpenSSL::SSL::SSLSocket) }
 
     let(:self_signed_crt_path) { File.join(CHEF_SPEC_DATA, "trusted_certs", "example.crt") }
-    let(:self_signed_crt) { OpenSSL::X509::Certificate.new(File.read(self_signed_crt_path)) }
+    let(:self_signed_crt) { ::OpenSSL::X509::Certificate.new(File.read(self_signed_crt_path)) }
 
     let(:trusted_certs_dir) { Dir.mktmpdir }
 
@@ -158,7 +158,7 @@ E
 
       before do
         expect(ssl_fetch).to receive(:proxified_socket).with("foo.example.com", 8443).and_return(tcp_socket)
-        expect(OpenSSL::SSL::SSLSocket).to receive(:new).with(tcp_socket, ssl_fetch.noverify_peer_ssl_context).and_return(ssl_socket)
+        expect(::OpenSSL::SSL::SSLSocket).to receive(:new).with(tcp_socket, ssl_fetch.noverify_peer_ssl_context).and_return(ssl_socket)
         expect(ssl_socket).to receive(:connect)
         expect(ssl_socket).to receive(:peer_cert_chain).and_return([self_signed_crt])
       end
@@ -176,11 +176,11 @@ E
 
       let(:name_args) { %w{http://foo.example.com} }
 
-      let(:unknown_protocol_error) { OpenSSL::SSL::SSLError.new("SSL_connect returned=1 errno=0 state=SSLv2/v3 read server hello A: unknown protocol") }
+      let(:unknown_protocol_error) { ::OpenSSL::SSL::SSLError.new("SSL_connect returned=1 errno=0 state=SSLv2/v3 read server hello A: unknown protocol") }
 
       before do
         expect(ssl_fetch).to receive(:proxified_socket).with("foo.example.com", 80).and_return(tcp_socket)
-        expect(OpenSSL::SSL::SSLSocket).to receive(:new).with(tcp_socket, ssl_fetch.noverify_peer_ssl_context).and_return(ssl_socket)
+        expect(::OpenSSL::SSL::SSLSocket).to receive(:new).with(tcp_socket, ssl_fetch.noverify_peer_ssl_context).and_return(ssl_socket)
         expect(ssl_socket).to receive(:connect).and_raise(unknown_protocol_error)
 
         expect(ssl_fetch).to receive(:exit).with(1)
@@ -200,11 +200,11 @@ ERROR_TEXT
 
     describe "when the certificate does not have a CN" do
       let(:self_signed_crt_path) { File.join(CHEF_SPEC_DATA, "trusted_certs", "example_no_cn.crt") }
-      let(:self_signed_crt) { OpenSSL::X509::Certificate.new(File.read(self_signed_crt_path)) }
+      let(:self_signed_crt) { ::OpenSSL::X509::Certificate.new(File.read(self_signed_crt_path)) }
 
       before do
         expect(ssl_fetch).to receive(:proxified_socket).with("foo.example.com", 8443).and_return(tcp_socket)
-        expect(OpenSSL::SSL::SSLSocket).to receive(:new).with(tcp_socket, ssl_fetch.noverify_peer_ssl_context).and_return(ssl_socket)
+        expect(::OpenSSL::SSL::SSLSocket).to receive(:new).with(tcp_socket, ssl_fetch.noverify_peer_ssl_context).and_return(ssl_socket)
         expect(ssl_socket).to receive(:connect)
         expect(ssl_socket).to receive(:peer_cert_chain).and_return([self_signed_crt])
         expect(Time).to receive(:new).and_return(1)

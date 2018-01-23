@@ -91,7 +91,7 @@ class Chef::EncryptedDataBagItem
         @decrypted_data ||= begin
           plaintext = openssl_decryptor.update(encrypted_bytes)
           plaintext << openssl_decryptor.final
-        rescue OpenSSL::Cipher::CipherError => e
+        rescue ::OpenSSL::Cipher::CipherError => e
           # if the key length is less than 255 characters, and it contains slashes, we think it may be a path.
           raise DecryptionFailure, "Error decrypting data bag value: '#{e.message}'. Most likely the provided key is incorrect. #{(@key.length < 255 && @key.include?('/')) ? 'You may need to use --secret-file rather than --secret.' : ''}"
         end
@@ -103,7 +103,7 @@ class Chef::EncryptedDataBagItem
 
       def openssl_decryptor
         @openssl_decryptor ||= begin
-          d = OpenSSL::Cipher.new(algorithm)
+          d = ::OpenSSL::Cipher.new(algorithm)
           d.decrypt
           d.pkcs5_keyivgen(key)
           d
@@ -142,7 +142,7 @@ class Chef::EncryptedDataBagItem
         @decrypted_data ||= begin
           plaintext = openssl_decryptor.update(encrypted_bytes)
           plaintext << openssl_decryptor.final
-        rescue OpenSSL::Cipher::CipherError => e
+        rescue ::OpenSSL::Cipher::CipherError => e
           # if the key length is less than 255 characters, and it contains slashes, we think it may be a path.
           raise DecryptionFailure, "Error decrypting data bag value: '#{e.message}'. Most likely the provided key is incorrect. #{( @key.length < 255 && @key.include?('/')) ? 'You may need to use --secret-file rather than --secret.' : ''}"
         end
@@ -151,10 +151,10 @@ class Chef::EncryptedDataBagItem
       def openssl_decryptor
         @openssl_decryptor ||= begin
           assert_valid_cipher!(@encrypted_data["cipher"], algorithm)
-          d = OpenSSL::Cipher.new(algorithm)
+          d = ::OpenSSL::Cipher.new(algorithm)
           d.decrypt
           # We must set key before iv: https://bugs.ruby-lang.org/issues/8221
-          d.key = OpenSSL::Digest::SHA256.digest(key)
+          d.key = ::OpenSSL::Digest::SHA256.digest(key)
           d.iv = iv
           d
         end
@@ -170,8 +170,8 @@ class Chef::EncryptedDataBagItem
       end
 
       def validate_hmac!
-        digest = OpenSSL::Digest.new("sha256")
-        raw_hmac = OpenSSL::HMAC.digest(digest, key, @encrypted_data["encrypted_data"])
+        digest = ::OpenSSL::Digest.new("sha256")
+        raw_hmac = ::OpenSSL::HMAC.digest(digest, key, @encrypted_data["encrypted_data"])
 
         if candidate_hmac_matches?(raw_hmac)
           true

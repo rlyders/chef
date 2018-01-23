@@ -51,9 +51,9 @@ class Chef
 
       def set_verify_mode
         if config[:ssl_verify_mode] == :verify_none
-          http_client.verify_mode = OpenSSL::SSL::VERIFY_NONE
+          http_client.verify_mode = ::OpenSSL::SSL::VERIFY_NONE
         elsif config[:ssl_verify_mode] == :verify_peer
-          http_client.verify_mode = OpenSSL::SSL::VERIFY_PEER
+          http_client.verify_mode = ::OpenSSL::SSL::VERIFY_PEER
         end
       end
 
@@ -73,13 +73,13 @@ class Chef
 
       def set_custom_certs
         unless http_client.cert_store
-          http_client.cert_store = OpenSSL::X509::Store.new
+          http_client.cert_store = ::OpenSSL::X509::Store.new
           http_client.cert_store.set_default_paths
         end
         if config.trusted_certs_dir
           certs = Dir.glob(File.join(Chef::Util::PathHelper.escape_glob_dir(config.trusted_certs_dir), "*.{crt,pem}"))
           certs.each do |cert_file|
-            cert = OpenSSL::X509::Certificate.new(File.read(cert_file))
+            cert = ::OpenSSL::X509::Certificate.new(File.read(cert_file))
             add_trusted_cert(cert)
           end
         end
@@ -96,8 +96,8 @@ class Chef
           unless ::File.exists?(config[:ssl_client_key])
             raise Chef::Exceptions::ConfigurationError, "The configured ssl_client_key #{config[:ssl_client_key]} does not exist"
           end
-          http_client.cert = OpenSSL::X509::Certificate.new(::File.read(config[:ssl_client_cert]))
-          http_client.key = OpenSSL::PKey::RSA.new(::File.read(config[:ssl_client_key]))
+          http_client.cert = ::OpenSSL::X509::Certificate.new(::File.read(config[:ssl_client_cert]))
+          http_client.key = ::OpenSSL::PKey::RSA.new(::File.read(config[:ssl_client_key]))
         end
       end
 
@@ -109,7 +109,7 @@ class Chef
 
       def add_trusted_cert(cert)
         http_client.cert_store.add_cert(cert)
-      rescue OpenSSL::X509::StoreError => e
+      rescue ::OpenSSL::X509::StoreError => e
         raise e unless e.message == "cert already in hash table"
       end
 
@@ -119,9 +119,9 @@ class Chef
 
       def set_verify_mode
         if config[:ssl_verify_mode] == :verify_peer || config[:verify_api_cert]
-          http_client.verify_mode = OpenSSL::SSL::VERIFY_PEER
+          http_client.verify_mode = ::OpenSSL::SSL::VERIFY_PEER
         elsif config[:ssl_verify_mode] == :verify_none
-          http_client.verify_mode = OpenSSL::SSL::VERIFY_NONE
+          http_client.verify_mode = ::OpenSSL::SSL::VERIFY_NONE
         end
       end
     end

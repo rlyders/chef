@@ -89,11 +89,11 @@ class Chef
         else
           return nil
         end
-        @key = OpenSSL::PKey::RSA.new(@raw_key)
+        @key = ::OpenSSL::PKey::RSA.new(@raw_key)
       rescue SystemCallError, IOError => e
         Chef::Log.warn "Failed to read the private key #{key_file}: #{e.inspect}"
         raise Chef::Exceptions::PrivateKeyMissing, "I cannot read #{key_file}, which you told me to use to sign requests!"
-      rescue OpenSSL::PKey::RSAError
+      rescue ::OpenSSL::PKey::RSAError
         msg = "The file #{key_file} or :raw_key option does not contain a correctly formatted private key.\n"
         msg << "The key file should begin with '-----BEGIN RSA PRIVATE KEY-----' and end with '-----END RSA PRIVATE KEY-----'"
         raise Chef::Exceptions::InvalidPrivateKey, msg

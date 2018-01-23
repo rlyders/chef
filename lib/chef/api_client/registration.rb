@@ -172,7 +172,7 @@ class Chef
       end
 
       def generated_private_key
-        @generated_key ||= OpenSSL::PKey::RSA.generate(2048)
+        @generated_key ||= ::OpenSSL::PKey::RSA.generate(2048)
       end
 
       def generated_public_key

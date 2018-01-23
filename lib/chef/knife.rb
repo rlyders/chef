@@ -454,7 +454,7 @@ class Chef
         raise # make sure exit passes through.
       when Net::HTTPServerException, Net::HTTPFatalError
         humanize_http_exception(e)
-      when OpenSSL::SSL::SSLError
+      when ::OpenSSL::SSL::SSLError
         ui.error "Could not establish a secure connection to the server."
         ui.info "Use `knife ssl check` to troubleshoot your SSL configuration."
         ui.info "If your Chef Server uses a self-signed certificate, you can use"

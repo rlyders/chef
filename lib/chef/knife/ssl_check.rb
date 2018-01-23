@@ -78,7 +78,7 @@ class Chef
       def verify_peer_socket
         @verify_peer_socket ||= begin
           tcp_connection = proxified_socket(host, port)
-          ssl_client = OpenSSL::SSL::SSLSocket.new(tcp_connection, verify_peer_ssl_context)
+          ssl_client = ::OpenSSL::SSL::SSLSocket.new(tcp_connection, verify_peer_ssl_context)
           ssl_client.hostname = host
           ssl_client
         end
@@ -86,9 +86,9 @@ class Chef
 
       def verify_peer_ssl_context
         @verify_peer_ssl_context ||= begin
-          verify_peer_context = OpenSSL::SSL::SSLContext.new
+          verify_peer_context = ::OpenSSL::SSL::SSLContext.new
           @ssl_policy.apply_to(verify_peer_context)
-          verify_peer_context.verify_mode = OpenSSL::SSL::VERIFY_PEER
+          verify_peer_context.verify_mode = ::OpenSSL::SSL::VERIFY_PEER
           verify_peer_context
         end
       end
@@ -96,15 +96,15 @@ class Chef
       def noverify_socket
         @noverify_socket ||= begin
           tcp_connection = proxified_socket(host, port)
-          OpenSSL::SSL::SSLSocket.new(tcp_connection, noverify_peer_ssl_context)
+          ::OpenSSL::SSL::SSLSocket.new(tcp_connection, noverify_peer_ssl_context)
         end
       end
 
       def noverify_peer_ssl_context
         @noverify_peer_ssl_context ||= begin
-          noverify_peer_context = OpenSSL::SSL::SSLContext.new
+          noverify_peer_context = ::OpenSSL::SSL::SSLContext.new
           @ssl_policy.apply_to(noverify_peer_context)
-          noverify_peer_context.verify_mode = OpenSSL::SSL::VERIFY_NONE
+          noverify_peer_context.verify_mode = ::OpenSSL::SSL::VERIFY_NONE
           noverify_peer_context
         end
       end
@@ -129,7 +129,7 @@ class Chef
         ui.msg("Connecting to host #{host}:#{port}")
         verify_peer_socket.connect
         true
-      rescue OpenSSL::SSL::SSLError => e
+      rescue ::OpenSSL::SSL::SSLError => e
         ui.error "The SSL certificate of #{host} could not be verified"
         Chef::Log.debug e.message
         debug_invalid_cert
@@ -139,7 +139,7 @@ class Chef
       def verify_cert_host
         verify_peer_socket.post_connection_check(host)
         true
-      rescue OpenSSL::SSL::SSLError => e
+      rescue ::OpenSSL::SSL::SSLError => e
         ui.error "The SSL cert is signed by a trusted authority but is not valid for the given hostname"
         Chef::Log.debug(e)
         debug_invalid_host
@@ -227,9 +227,9 @@ ADVICE
 
       def debug_ssl_settings
         ui.err "OpenSSL Configuration:"
-        ui.err "* Version: #{OpenSSL::OPENSSL_VERSION}"
-        ui.err "* Certificate file: #{OpenSSL::X509::DEFAULT_CERT_FILE}"
-        ui.err "* Certificate directory: #{OpenSSL::X509::DEFAULT_CERT_DIR}"
+        ui.err "* Version: #{::OpenSSL::OPENSSL_VERSION}"
+        ui.err "* Certificate file: #{::OpenSSL::X509::DEFAULT_CERT_FILE}"
+        ui.err "* Certificate directory: #{::OpenSSL::X509::DEFAULT_CERT_DIR}"
       end
 
       def debug_chef_ssl_config
@@ -265,15 +265,15 @@ ADVICE
       end
 
       def check_X509_certificate(cert_file)
-        store = OpenSSL::X509::Store.new
-        cert = OpenSSL::X509::Certificate.new(IO.read(File.expand_path(cert_file)))
+        store = ::OpenSSL::X509::Store.new
+        cert = ::OpenSSL::X509::Certificate.new(IO.read(File.expand_path(cert_file)))
         begin
           store.add_cert(cert)
           # test if the store can verify the cert we just added
           unless store.verify(cert) # true if verified, false if not
             return store.error_string
           end
-        rescue OpenSSL::X509::StoreError => e
+        rescue ::OpenSSL::X509::StoreError => e
           return e.message
         end
         nil

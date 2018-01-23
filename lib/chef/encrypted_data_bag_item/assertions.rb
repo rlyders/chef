@@ -44,7 +44,7 @@ class Chef::EncryptedDataBagItem
     end
 
     def assert_aead_requirements_met!(algorithm)
-      unless OpenSSL::Cipher.ciphers.include?(algorithm)
+      unless ::OpenSSL::Cipher.ciphers.include?(algorithm)
         raise EncryptedDataBagRequirementsFailure, "The used Encrypted Data Bags version requires an OpenSSL version with \"#{algorithm}\" algorithm support"
       end
     end

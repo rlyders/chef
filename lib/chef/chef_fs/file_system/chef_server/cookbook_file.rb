@@ -69,7 +69,7 @@ class Chef
           private
 
           def calc_checksum(value)
-            OpenSSL::Digest::MD5.hexdigest(value)
+            ::OpenSSL::Digest::MD5.hexdigest(value)
           end
         end
       end

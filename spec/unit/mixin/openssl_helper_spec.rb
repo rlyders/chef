@@ -88,7 +88,7 @@ describe Chef::Mixin::OpenSSLHelper do
     end
 
     context "When the dhparam.pem file does exist, but does not contain a valid dhparam key" do
-      it "Throws an OpenSSL::PKey::DHError exception" do
+      it "Throws an ::OpenSSL::PKey::DHError exception" do
         expect do
           @dhparam_file.puts("I_am_not_a_key_I_am_a_free_man")
           @dhparam_file.close
@@ -127,7 +127,7 @@ describe Chef::Mixin::OpenSSLHelper do
     end
 
     context "When the key file does exist, but does not contain a valid rsa private key" do
-      it "Throws an OpenSSL::PKey::RSAError exception" do
+      it "Throws an ::OpenSSL::PKey::RSAError exception" do
         @keyfile.write("I_am_not_a_key_I_am_a_free_man")
         @keyfile.close
         expect(instance.priv_key_file_valid?(@keyfile.path)).to be_falsey

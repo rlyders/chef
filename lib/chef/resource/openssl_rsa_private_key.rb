@@ -37,7 +37,7 @@ class Chef
       property :path,        String, name_property: true
       property :key_length,  equal_to: [1024, 2048, 4096, 8192], default: 2048
       property :key_pass,    String
-      property :key_cipher,  String, default: "des3", equal_to: OpenSSL::Cipher.ciphers
+      property :key_cipher,  String, default: "des3", equal_to: ::OpenSSL::Cipher.ciphers
       property :owner,       [String, nil]
       property :group,       [String, nil]
       property :mode,        [Integer, String], default: "0600"

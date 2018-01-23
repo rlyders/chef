@@ -101,15 +101,15 @@ E
     let(:trusted_certs_dir) { File.join(CHEF_SPEC_DATA, "trusted_certs") }
     let(:trusted_cert_file) { File.join(trusted_certs_dir, "example.crt") }
 
-    let(:store) { OpenSSL::X509::Store.new }
-    let(:certificate) { OpenSSL::X509::Certificate.new(IO.read(trusted_cert_file)) }
+    let(:store) { ::OpenSSL::X509::Store.new }
+    let(:certificate) { ::OpenSSL::X509::Certificate.new(IO.read(trusted_cert_file)) }
 
     before do
       Chef::Config[:trusted_certs_dir] = trusted_certs_dir
       allow(ssl_check).to receive(:trusted_certificates).and_return([trusted_cert_file])
       allow(store).to receive(:add_cert).with(certificate)
-      allow(OpenSSL::X509::Store).to receive(:new).and_return(store)
-      allow(OpenSSL::X509::Certificate).to receive(:new).with(IO.read(trusted_cert_file)).and_return(certificate)
+      allow(::OpenSSL::X509::Store).to receive(:new).and_return(store)
+      allow(::OpenSSL::X509::Certificate).to receive(:new).with(IO.read(trusted_cert_file)).and_return(certificate)
       allow(ssl_check).to receive(:verify_cert).and_return(true)
       allow(ssl_check).to receive(:verify_cert_host).and_return(true)
     end
@@ -158,11 +158,11 @@ E
     let(:name_args) { %w{https://foo.example.com:8443} }
 
     let(:tcp_socket) { double(TCPSocket) }
-    let(:ssl_socket) { double(OpenSSL::SSL::SSLSocket) }
+    let(:ssl_socket) { double(::OpenSSL::SSL::SSLSocket) }
 
     before do
       expect(ssl_check).to receive(:proxified_socket).with("foo.example.com", 8443).and_return(tcp_socket)
-      expect(OpenSSL::SSL::SSLSocket).to receive(:new).with(tcp_socket, ssl_check.verify_peer_ssl_context).and_return(ssl_socket)
+      expect(::OpenSSL::SSL::SSLSocket).to receive(:new).with(tcp_socket, ssl_check.verify_peer_ssl_context).and_return(ssl_socket)
     end
 
     def run
@@ -191,10 +191,10 @@ E
     describe "and the certificate is not valid" do
 
       let(:tcp_socket_for_debug) { double(TCPSocket) }
-      let(:ssl_socket_for_debug) { double(OpenSSL::SSL::SSLSocket) }
+      let(:ssl_socket_for_debug) { double(::OpenSSL::SSL::SSLSocket) }
 
       let(:self_signed_crt_path) { File.join(CHEF_SPEC_DATA, "trusted_certs", "example.crt") }
-      let(:self_signed_crt) { OpenSSL::X509::Certificate.new(File.read(self_signed_crt_path)) }
+      let(:self_signed_crt) { ::OpenSSL::X509::Certificate.new(File.read(self_signed_crt_path)) }
 
       before do
         @old_signal = trap(:INT, "DEFAULT")
@@ -202,7 +202,7 @@ E
         expect(ssl_check).to receive(:proxified_socket).
           with("foo.example.com", 8443).
           and_return(tcp_socket_for_debug)
-        expect(OpenSSL::SSL::SSLSocket).to receive(:new).
+        expect(::OpenSSL::SSL::SSLSocket).to receive(:new).
           with(tcp_socket_for_debug, ssl_check.noverify_peer_ssl_context).
           and_return(ssl_socket_for_debug)
       end
@@ -217,7 +217,7 @@ E
           expect(ssl_socket).to receive(:connect) # no error
           expect(ssl_socket).to receive(:post_connection_check).
             with("foo.example.com").
-            and_raise(OpenSSL::SSL::SSLError)
+            and_raise(::OpenSSL::SSL::SSLError)
           expect(ssl_socket).to receive(:hostname=).with("foo.example.com") # no error
           expect(ssl_socket_for_debug).to receive(:connect)
           expect(ssl_socket_for_debug).to receive(:peer_cert).and_return(self_signed_crt)
@@ -236,7 +236,7 @@ E
         before do
           expect(ssl_check).to receive(:verify_X509).and_return(true) # X509 valid certs
           expect(ssl_socket).to receive(:connect).
-            and_raise(OpenSSL::SSL::SSLError)
+            and_raise(::OpenSSL::SSL::SSLError)
           expect(ssl_socket).to receive(:hostname=).
             with("foo.example.com") # no error
           expect(ssl_socket_for_debug).to receive(:connect)

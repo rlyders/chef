@@ -214,7 +214,7 @@ def root?
 end
 
 def openssl_gte_101?
-  OpenSSL::OPENSSL_VERSION_NUMBER >= 10001000
+  ::OpenSSL::OPENSSL_VERSION_NUMBER >= 10001000
 end
 
 def openssl_lt_101?
@@ -222,7 +222,7 @@ def openssl_lt_101?
 end
 
 def aes_256_gcm?
-  OpenSSL::Cipher.ciphers.include?("aes-256-gcm")
+  ::OpenSSL::Cipher.ciphers.include?("aes-256-gcm")
 end
 
 def fips?

@@ -64,7 +64,7 @@ describe Chef::ApiClient::Registration do
   let(:exception_409) { Net::HTTPServerException.new("409 conflict", response_409) }
 
   let(:generated_private_key_pem) { IO.read(File.expand_path("ssl/private_key.pem", CHEF_SPEC_DATA)) }
-  let(:generated_private_key) { OpenSSL::PKey::RSA.new(generated_private_key_pem) }
+  let(:generated_private_key) { ::OpenSSL::PKey::RSA.new(generated_private_key_pem) }
   let(:generated_public_key) { generated_private_key.public_key }
 
   let(:create_with_pkey_response) do
@@ -88,7 +88,7 @@ describe Chef::ApiClient::Registration do
   before do
     Chef::Config[:validation_client_name] = "test-validator"
     Chef::Config[:validation_key] = File.expand_path("ssl/private_key.pem", CHEF_SPEC_DATA)
-    allow(OpenSSL::PKey::RSA).to receive(:generate).with(2048).and_return(generated_private_key)
+    allow(::OpenSSL::PKey::RSA).to receive(:generate).with(2048).and_return(generated_private_key)
   end
 
   after do
@@ -112,7 +112,7 @@ describe Chef::ApiClient::Registration do
         with("clients", expected_post_data).
         and_return(create_with_pkey_response)
       expect(registration.run.public_key).to eq(create_with_pkey_response["chef_key"]["public_key"])
-      expect(OpenSSL::PKey::RSA.new(registration.private_key).to_s).to eq(OpenSSL::PKey::RSA.new(generated_private_key_pem).to_s)
+      expect(::OpenSSL::PKey::RSA.new(registration.private_key).to_s).to eq(::OpenSSL::PKey::RSA.new(generated_private_key_pem).to_s)
     end
 
     it "puts a locally generated public key to the server to update a client" do
@@ -123,7 +123,7 @@ describe Chef::ApiClient::Registration do
         with("clients/#{client_name}", expected_put_data).
         and_return(update_with_pkey_response)
       expect(registration.run.public_key).to eq(update_with_pkey_response["public_key"].to_pem)
-      expect(OpenSSL::PKey::RSA.new(registration.private_key).to_s).to eq(OpenSSL::PKey::RSA.new(generated_private_key_pem).to_s)
+      expect(::OpenSSL::PKey::RSA.new(registration.private_key).to_s).to eq(::OpenSSL::PKey::RSA.new(generated_private_key_pem).to_s)
     end
 
     it "writes the generated private key to disk" do
@@ -131,7 +131,7 @@ describe Chef::ApiClient::Registration do
         with("clients", expected_post_data).
         and_return(create_with_pkey_response)
       registration.run
-      expect(OpenSSL::PKey::RSA.new(IO.read(key_location)).to_s).to eq(OpenSSL::PKey::RSA.new(generated_private_key_pem).to_s)
+      expect(::OpenSSL::PKey::RSA.new(IO.read(key_location)).to_s).to eq(::OpenSSL::PKey::RSA.new(generated_private_key_pem).to_s)
     end
 
     context "and the client already exists on a Chef 11 server" do
@@ -141,7 +141,7 @@ describe Chef::ApiClient::Registration do
           with("clients/#{client_name}", expected_put_data).
           and_return(update_with_pkey_response)
         expect(registration.run.public_key).to eq(update_with_pkey_response["public_key"].to_pem)
-        expect(OpenSSL::PKey::RSA.new(registration.private_key).to_s).to eq(OpenSSL::PKey::RSA.new(generated_private_key_pem).to_s)
+        expect(::OpenSSL::PKey::RSA.new(registration.private_key).to_s).to eq(::OpenSSL::PKey::RSA.new(generated_private_key_pem).to_s)
       end
     end
 
@@ -157,7 +157,7 @@ describe Chef::ApiClient::Registration do
 
       before do
         Chef::Config[:local_key_generation] = false
-        expect(OpenSSL::PKey::RSA).not_to receive(:generate)
+        expect(::OpenSSL::PKey::RSA).not_to receive(:generate)
       end
 
       it "creates a new ApiClient on the server using the validator identity" do
@@ -246,7 +246,7 @@ describe Chef::ApiClient::Registration do
     it "creates the client on the server and writes the key" do
       expect(http_mock).to receive(:post).ordered.and_return(server_v10_response)
       registration.run
-      expect(OpenSSL::PKey::RSA.new(IO.read(key_location)).to_s).to eq(OpenSSL::PKey::RSA.new(generated_private_key_pem).to_s)
+      expect(::OpenSSL::PKey::RSA.new(IO.read(key_location)).to_s).to eq(::OpenSSL::PKey::RSA.new(generated_private_key_pem).to_s)
     end
 
     it "retries up to 5 times" do
@@ -261,7 +261,7 @@ describe Chef::ApiClient::Registration do
 
       expect(http_mock).to receive(:post).ordered.and_return(server_v10_response)
       registration.run
-      expect(OpenSSL::PKey::RSA.new(IO.read(key_location)).to_s).to eq(OpenSSL::PKey::RSA.new(generated_private_key_pem).to_s)
+      expect(::OpenSSL::PKey::RSA.new(IO.read(key_location)).to_s).to eq(::OpenSSL::PKey::RSA.new(generated_private_key_pem).to_s)
     end
 
     it "gives up retrying after the max attempts" do

@@ -99,10 +99,10 @@ class Chef::EncryptedDataBagItem
       # it for the specified iv and encryption key.
       def openssl_encryptor
         @openssl_encryptor ||= begin
-          encryptor = OpenSSL::Cipher.new(algorithm)
+          encryptor = ::OpenSSL::Cipher.new(algorithm)
           encryptor.encrypt
           # We must set key before iv: https://bugs.ruby-lang.org/issues/8221
-          encryptor.key = OpenSSL::Digest::SHA256.digest(key)
+          encryptor.key = ::OpenSSL::Digest::SHA256.digest(key)
           @iv ||= encryptor.random_iv
           encryptor.iv = @iv
           encryptor
@@ -148,8 +148,8 @@ class Chef::EncryptedDataBagItem
       # Generates an HMAC-SHA2-256 of the encrypted data (encrypt-then-mac)
       def hmac
         @hmac ||= begin
-          digest = OpenSSL::Digest.new("sha256")
-          raw_hmac = OpenSSL::HMAC.digest(digest, key, encrypted_data)
+          digest = ::OpenSSL::Digest.new("sha256")
+          raw_hmac = ::OpenSSL::HMAC.digest(digest, key, encrypted_data)
           Base64.encode64(raw_hmac)
         end
       end

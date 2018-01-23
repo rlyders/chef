@@ -435,13 +435,13 @@ class Chef
           retry
         end
         raise Timeout::Error, "Timeout connecting to #{url}, giving up"
-      rescue OpenSSL::SSL::SSLError => e
+      rescue ::OpenSSL::SSL::SSLError => e
         if (http_retry_count - http_attempts + 1 > 0) && !e.message.include?("certificate verify failed")
           Chef::Log.error("SSL Error connecting to #{url}, retry #{http_attempts}/#{http_retry_count}")
           sleep(http_retry_delay)
           retry
         end
-        raise OpenSSL::SSL::SSLError, "SSL Error connecting to #{url} - #{e.message}"
+        raise ::OpenSSL::SSL::SSLError, "SSL Error connecting to #{url} - #{e.message}"
       end
     end
 

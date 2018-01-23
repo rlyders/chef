@@ -74,15 +74,15 @@ class Chef
 
       def remote_cert_chain
         tcp_connection = proxified_socket(host, port)
-        shady_ssl_connection = OpenSSL::SSL::SSLSocket.new(tcp_connection, noverify_peer_ssl_context)
+        shady_ssl_connection = ::OpenSSL::SSL::SSLSocket.new(tcp_connection, noverify_peer_ssl_context)
         shady_ssl_connection.connect
         shady_ssl_connection.peer_cert_chain
       end
 
       def noverify_peer_ssl_context
         @noverify_peer_ssl_context ||= begin
-          noverify_peer_context = OpenSSL::SSL::SSLContext.new
-          noverify_peer_context.verify_mode = OpenSSL::SSL::VERIFY_NONE
+          noverify_peer_context = ::OpenSSL::SSL::SSLContext.new
+          noverify_peer_context.verify_mode = ::OpenSSL::SSL::VERIFY_NONE
           noverify_peer_context
         end
       end
@@ -141,7 +141,7 @@ TRUST_TRUST
         remote_cert_chain.each do |cert|
           write_cert(cert)
         end
-      rescue OpenSSL::SSL::SSLError => e
+      rescue ::OpenSSL::SSL::SSLError => e
         # 'unknown protocol' usually means you tried to connect to a non-ssl
         # service. We handle that specially here, any other error we let bubble
         # up (probably a bug of some sort).

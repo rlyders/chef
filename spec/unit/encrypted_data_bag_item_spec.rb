@@ -23,7 +23,7 @@ module Version0Encryptor
   def self.encrypt_value(plaintext_data, key)
     data = plaintext_data.to_yaml
 
-    cipher = OpenSSL::Cipher.new("aes-256-cbc")
+    cipher = ::OpenSSL::Cipher.new("aes-256-cbc")
     cipher.encrypt
     cipher.pkcs5_keyivgen(key)
     encrypted_bytes = cipher.update(data)
@@ -126,9 +126,9 @@ describe Chef::EncryptedDataBagItem::Encryptor do
 
       it "throws an error warning about the OpenSSL version if it has no GCM support" do
         # Force Ruby with AEAD support
-        allow(OpenSSL::Cipher).to receive(:method_defined?).with(:auth_data=).and_return(true)
+        allow(::OpenSSL::Cipher).to receive(:method_defined?).with(:auth_data=).and_return(true)
         # OpenSSL without AEAD support
-        expect(OpenSSL::Cipher).to receive(:ciphers).and_return([])
+        expect(::OpenSSL::Cipher).to receive(:ciphers).and_return([])
         expect { encryptor }.to raise_error(Chef::EncryptedDataBagItem::EncryptedDataBagRequirementsFailure, /requires an OpenSSL/)
       end
 
@@ -216,8 +216,8 @@ describe Chef::EncryptedDataBagItem::Decryptor do
     end
 
     let(:bogus_hmac) do
-      digest = OpenSSL::Digest.new("sha256")
-      raw_hmac = OpenSSL::HMAC.digest(digest, "WRONG", encrypted_value["encrypted_data"])
+      digest = ::OpenSSL::Digest.new("sha256")
+      raw_hmac = ::OpenSSL::HMAC.digest(digest, "WRONG", encrypted_value["encrypted_data"])
       Base64.encode64(raw_hmac)
     end
 

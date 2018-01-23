@@ -621,7 +621,7 @@ describe Chef::DataCollector::Reporter do
 
     [ Timeout::Error, Errno::EINVAL, Errno::ECONNRESET,
       Errno::ECONNREFUSED, EOFError, Net::HTTPBadResponse,
-      Net::HTTPHeaderSyntaxError, Net::ProtocolError, OpenSSL::SSL::SSLError,
+      Net::HTTPHeaderSyntaxError, Net::ProtocolError, ::OpenSSL::SSL::SSLError,
       Errno::EHOSTDOWN ].each do |exception_class|
       context "when the block raises a #{exception_class} exception" do
         it "disables the reporter" do

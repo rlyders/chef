@@ -94,7 +94,7 @@ class Chef
           # force the issue:
           return [http_request, response]
         end
-      rescue OpenSSL::SSL::SSLError => e
+      rescue ::OpenSSL::SSL::SSLError => e
         Chef::Log.error("SSL Validation failure connecting to host: #{host} - #{e.message}")
         raise
       end

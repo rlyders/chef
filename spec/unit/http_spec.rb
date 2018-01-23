@@ -210,17 +210,17 @@ describe Chef::HTTP do
 
     end
 
-    context "when OpenSSL::SSL::SSLError is raised" do
+    context "when ::OpenSSL::SSL::SSLError is raised" do
 
-      let(:exception) { OpenSSL::SSL::SSLError.new("example error") }
+      let(:exception) { ::OpenSSL::SSL::SSLError.new("example error") }
 
       include_examples "retriable_request_errors"
 
     end
 
-    context "when OpenSSL::SSL::SSLError is raised for certificate validation failure" do
+    context "when ::OpenSSL::SSL::SSLError is raised for certificate validation failure" do
 
-      let(:exception) { OpenSSL::SSL::SSLError.new("ssl_connect returned=1 errno=0 state=sslv3 read server certificate b: certificate verify failed") }
+      let(:exception) { ::OpenSSL::SSL::SSLError.new("ssl_connect returned=1 errno=0 state=sslv3 read server certificate b: certificate verify failed") }
 
       include_examples "errors_that_are_not_retried"
 

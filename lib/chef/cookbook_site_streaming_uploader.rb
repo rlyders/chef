@@ -75,7 +75,7 @@ class Chef
         parts = []
         content_file = nil
 
-        secret_key = OpenSSL::PKey::RSA.new(File.read(secret_key_filename))
+        secret_key = ::OpenSSL::PKey::RSA.new(File.read(secret_key_filename))
 
         unless params.nil? || params.empty?
           params.each do |key, value|

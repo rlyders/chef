@@ -566,7 +566,7 @@ describe Chef::Knife do
     end
 
     it "formats SSL errors nicely and suggests to use `knife ssl check` and `knife ssl fetch`" do
-      error = OpenSSL::SSL::SSLError.new("SSL_connect returned=1 errno=0 state=SSLv3 read server certificate B: certificate verify failed")
+      error = ::OpenSSL::SSL::SSLError.new("SSL_connect returned=1 errno=0 state=SSLv3 read server certificate B: certificate verify failed")
       allow(knife).to receive(:run).and_raise(error)
 
       knife.run_with_pretty_exceptions

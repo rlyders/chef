@@ -16,7 +16,6 @@ build: &build
       name: chef-config rspec
       command: |
         mkdir -p test_results
-        cd chef-config
         sudo -E $(which bundle) exec rake component_specs
     - type: shell
       name: chef rspec

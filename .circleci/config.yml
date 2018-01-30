@@ -36,9 +36,17 @@ jobs:
     <<: *build
     docker:
       - image: circleci/ruby:2.5
+  ports:
+    docker:
+      - image: circleci/ruby:2.5
+    steps:
+      - checkout
+      - run:
+          name: check ports
+          command: sudo netstat -ntlp
   chefstyle:
     docker:
-      - image: circleci/ruby:2.4
+      - image: circleci/ruby:2.5
     steps:
       - checkout
       - type: cache-restore
@@ -59,6 +67,7 @@ workflows:
   version: 2
   test:
     jobs:
-      - ruby_2_4
-      - ruby_2_5
+      # - ruby_2_4
+      # - ruby_2_5
       - chefstyle
+      - ports

@@ -3,13 +3,13 @@ build: &build
     - checkout
     - type: cache-restore
       name: Restore bundle cache
-      key: chef-v1-{{ .Environment.CIRCLE_BUILD_IMAGE }}-bundle-{{ checksum "Gemfile.lock" }}
+      key: chef-v1-{{ .Environment.CIRCLE_JOB }}-bundle-{{ checksum "Gemfile.lock" }}
     - run:
         name: Bundle Install
         command: bundle install --path vendor/bundle --without ci docgen guard integration maintenance omnibus_package --frozen
     - type: cache-save
       name: Save bundle cache
-      key: chef-v1-{{ .Environment.CIRCLE_BUILD_IMAGE }}-bundle-{{ checksum "Gemfile.lock" }}
+      key: chef-v1-{{ .Environment.CIRCLE_JOB }}-bundle-{{ checksum "Gemfile.lock" }}
       paths:
         - vendor/bundle
     - type: shell

@@ -2,7 +2,7 @@
 # Author:: Christopher Brown (<cb@chef.io>)
 # Author:: Christopher Walters (<cw@chef.io>)
 # Author:: Tim Hinderliter (<tim@chef.io>)
-# Copyright:: Copyright 2008-2016, Chef Software, Inc.
+# Copyright:: Copyright 2008-2018, Chef Software Inc.
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -179,6 +179,9 @@ class Chef
     def policy_group=(policy_group)
       policy_group(policy_group)
     end
+
+    # @api private
+    attr_writer :attributes
 
     def attributes
       @attributes ||= Chef::Node::Attribute.new({}, {}, {}, {}, self)
@@ -519,10 +522,7 @@ class Chef
       if o.has_key?("attributes")
         node.normal_attrs = o["attributes"]
       end
-      node.automatic_attrs = Mash.new(o["automatic"]) if o.has_key?("automatic")
-      node.normal_attrs = Mash.new(o["normal"]) if o.has_key?("normal")
-      node.default_attrs = Mash.new(o["default"]) if o.has_key?("default")
-      node.override_attrs = Mash.new(o["override"]) if o.has_key?("override")
+      node.attributes = Chef::Node::Attribute(o["normal"], o["default"], o["override"], o["automatic"])
 
       if o.has_key?("run_list")
         node.run_list.reset!(o["run_list"])

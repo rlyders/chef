@@ -184,6 +184,10 @@ class Chef
         ret # rubocop:disable Lint/Void
       end
 
+      def internal_set(key, value)
+        regular_writer(key, convert_value(value, __path__ + [ key ]))
+      end
+
       def update(other_hash)
         other_hash.each_pair { |key, value| regular_writer(convert_key(key), convert_value(value, __path__ + [ key ])) }
         self

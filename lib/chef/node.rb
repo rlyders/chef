@@ -515,7 +515,7 @@ class Chef
       if o.has_key?("attributes")
         node.normal_attrs = o["attributes"]
       end
-      node.attributes = Chef::Node::Attribute.new(o["normal"], o["default"], o["override"], o["automatic"])
+      node.attributes = Chef::Node::Attribute.new(o["normal"], o["default"], o["override"], o["automatic"], self)
 
       if o.has_key?("run_list")
         node.run_list.reset!(o["run_list"])

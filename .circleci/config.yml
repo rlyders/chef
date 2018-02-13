@@ -21,7 +21,7 @@ build: &build
           rvm use 2.5.0
           bundle install --path vendor/bundle --without ci docgen guard integration maintenance omnibus_package --frozen
           cd chef-config
-          bundle install --path vendor/bundle --without ci docgen guard integration maintenance omnibus_package --frozen
+          bundle install --path ../vendor/bundle --without ci docgen guard integration maintenance omnibus_package
     - type: cache-save
       name: Save bundle cache
       key: chef-v1-{{ .Environment.CIRCLE_JOB }}-bundle-{{ checksum "Gemfile.lock" }}

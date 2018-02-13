@@ -20,6 +20,8 @@ build: &build
           source /opt/circleci/.rvm/scripts/rvm
           rvm use 2.5.0
           bundle install --path vendor/bundle --without ci docgen guard integration maintenance omnibus_package --frozen
+          cd chef-config
+          bundle install --path vendor/bundle --without ci docgen guard integration maintenance omnibus_package --frozen
     - type: cache-save
       name: Save bundle cache
       key: chef-v1-{{ .Environment.CIRCLE_JOB }}-bundle-{{ checksum "Gemfile.lock" }}
@@ -29,9 +31,10 @@ build: &build
       name: chef-config rspec
       command: |
         mkdir -p test_results
+        cd chef-config
         source /opt/circleci/.rvm/scripts/rvm
         rvm use 2.5.0
-        sudo -E $(which bundle) exec rake component_specs
+        sudo -E $(which bundle) exec rake spec
     - type: shell
       name: chef rspec
       command: |

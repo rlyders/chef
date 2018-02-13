@@ -5,8 +5,8 @@ build: &build
         environment:
           CIRCLECI_USER: circleci
         command: |
-          source ~/.rvm/scripts/rvm
-          sudo -E circleci-install ruby 2.5.0 || true
+          sudo ln -sf /opt/circleci /home/travis
+          source /opt/circleci/.rvm/scripts/rvm
           rvm use 2.5.0
     - checkout
     - type: cache-restore

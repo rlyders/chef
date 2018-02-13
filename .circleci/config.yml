@@ -17,6 +17,7 @@ build: &build
         name: Bundle Install
         command: |
           echo $PATH
+          rvm use 2.5.0
           bundle install --path vendor/bundle --without ci docgen guard integration maintenance omnibus_package --frozen
     - type: cache-save
       name: Save bundle cache
@@ -27,11 +28,13 @@ build: &build
       name: chef-config rspec
       command: |
         mkdir -p test_results
+        rvm use 2.5.0
         sudo -E $(which bundle) exec rake component_specs
     - type: shell
       name: chef rspec
       command: |
         mkdir -p test_results
+        rvm use 2.5.0
         sudo -E $(which bundle) exec rake spec
     # Save test results for timing analysis
     - store_test_results:

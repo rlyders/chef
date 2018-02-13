@@ -9,7 +9,7 @@ build: &build
           sudo ln -sf /opt/circleci /home/travis
           source /opt/circleci/.rvm/scripts/rvm
           rvm use 2.5.0
-					echo '2.5.0' > ~/project/.ruby-version
+          echo '2.5.0' > ~/project/.ruby-version
     - type: cache-restore
       name: Restore bundle cache
       key: chef-v1-{{ .Environment.CIRCLE_JOB }}-bundle-{{ checksum "Gemfile.lock" }}

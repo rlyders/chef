@@ -1,5 +1,8 @@
 build: &build
   steps:
+    - run:
+        name: Install Ruby
+        command: rvm use 2.5.0
     - checkout
     - type: cache-restore
       name: Restore bundle cache
@@ -30,20 +33,10 @@ version: 2
 jobs:
   ruby_2_4:
     <<: *build
-    docker:
-      - image: circleci/ruby:2.4
+    machine: true
   ruby_2_5:
     <<: *build
-    docker:
-      - image: circleci/ruby:2.5
-  ports:
-    docker:
-      - image: circleci/ruby:2.5
-    steps:
-      - checkout
-      - run:
-          name: check ports
-          command: sudo netstat -ntlp
+    machine: true
   chefstyle:
     docker:
       - image: circleci/ruby:2.5
@@ -67,7 +60,5 @@ workflows:
   version: 2
   test:
     jobs:
-      # - ruby_2_4
-      # - ruby_2_5
+      - ruby_2_5
       - chefstyle
-      - ports

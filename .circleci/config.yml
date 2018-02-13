@@ -2,7 +2,9 @@ build: &build
   steps:
     - run:
         name: Install Ruby
-        command: rvm use 2.5.0
+        command: |
+          sudo -E circleci-install ruby 2.5.0 || true
+          rvm use 2.5.0
     - checkout
     - type: cache-restore
       name: Restore bundle cache

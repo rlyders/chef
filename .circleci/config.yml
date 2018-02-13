@@ -5,7 +5,7 @@ build: &build
         environment:
           CIRCLECI_USER: circleci
         command: |
-          rvm get stable --auto-dotfiles
+          source ~/.rvm/scripts/rvm
           sudo -E circleci-install ruby 2.5.0 || true
           rvm use 2.5.0
     - checkout

@@ -15,7 +15,9 @@ build: &build
       key: chef-v1-{{ .Environment.CIRCLE_JOB }}-bundle-{{ checksum "Gemfile.lock" }}
     - run:
         name: Bundle Install
-        command: bundle install --path vendor/bundle --without ci docgen guard integration maintenance omnibus_package --frozen
+        command: |
+          echo $PATH
+          bundle install --path vendor/bundle --without ci docgen guard integration maintenance omnibus_package --frozen
     - type: cache-save
       name: Save bundle cache
       key: chef-v1-{{ .Environment.CIRCLE_JOB }}-bundle-{{ checksum "Gemfile.lock" }}

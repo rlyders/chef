@@ -24,8 +24,6 @@ class Chef
     # will be created. If the RSA key file cannot be opened, either because it
     # does not exist or because the password to the RSA key file does not match
     # the password in the recipe, it will be overwritten.
-    #
-    # @since 14.0
     class OpensslRsaPrivateKey < Chef::Resource
       require "chef/mixin/openssl_helper"
       include Chef::Mixin::OpenSSLHelper
@@ -33,6 +31,8 @@ class Chef
       resource_name :openssl_rsa_private_key
       provides :openssl_rsa_private_key
       provides :openssl_rsa_key # legacy cookbook resource name
+
+      introduced '14.0'
 
       property :path,        String, name_property: true
       property :key_length,  equal_to: [1024, 2048, 4096, 8192], default: 2048

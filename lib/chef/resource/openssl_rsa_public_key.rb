@@ -20,13 +20,13 @@ require "chef/resource"
 class Chef
   class Resource
     # A resource for generating rsa public key files given a rsa private key.
-    #
-    # @since 14.0
     class OpensslRsaPublicKey < Chef::Resource
       require "chef/mixin/openssl_helper"
       include Chef::Mixin::OpenSSLHelper
 
       resource_name :openssl_rsa_public_key
+
+      introduced '14.0'
 
       property :path,                String, name_property: true
       property :private_key_path,    String

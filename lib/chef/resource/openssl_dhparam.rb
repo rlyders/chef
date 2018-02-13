@@ -23,13 +23,13 @@ class Chef
     # If a valid dhparam.pem file is found at the specified location, no new
     # file will be created. If a file is found at the specified location but it
     # is not a valid dhparam file, it will be overwritten.
-    #
-    # @since 14.0
     class OpensslDhparam < Chef::Resource
       require "chef/mixin/openssl_helper"
       include Chef::Mixin::OpenSSLHelper
 
       resource_name :openssl_dhparam
+
+      introduced '14.0'
 
       property :path,        String, name_property: true
       property :key_length,  equal_to: [1024, 2048, 4096, 8192], default: 2048

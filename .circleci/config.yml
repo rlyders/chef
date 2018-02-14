@@ -41,7 +41,9 @@ build: &build
         mkdir -p test_results
         source /opt/circleci/.rvm/scripts/rvm
         rvm use 2.5.0
-        sudo -E $(which bundle) exec rake spec:all
+        sudo -E $(which bundle) exec rake spec:unit
+        sudo -E $(which bundle) exec rake spec:functional
+        sudo -E $(which bundle) exec rake spec:integration
     # Save test results for timing analysis
     - store_test_results:
         path: test_results
